@@ -2,7 +2,8 @@
 How important is Elite11 MVP for C2C?
 
 
-![MVPBestYear](https://github.com/jjparker34/Elite11/assets/123410317/8bc642db-4bd9-4c07-84a1-d482f0e47e17)
+![Elite11MVPs](https://github.com/jjparker34/Elite11/assets/123410317/7993536b-7f05-48da-b45a-3dcfc98e72fc)
 
-![DraftComp](https://github.com/jjparker34/Elite11/assets/123410317/9a3ec276-df39-4a66-ba71-9d645ae0dca7)
+![Elite11Finalists](https://github.com/jjparker34/Elite11/assets/123410317/6c64c9c4-15e8-4ad4-b046-0cb523ebe0d6)
 
+![DraftComp](https://github.com/jjparker34/Elite11/assets/123410317/f2a96409-9581-42bd-ba8a-6b6ae9c8d0d5)
