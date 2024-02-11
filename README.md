@@ -1,6 +1,7 @@
 # Elite11
 How important is Elite11 MVP for C2C?
 
+<img src="https://github.com/jjparker34/Elite11/assets/123410317/7993536b-7f05-48da-b45a-3dcfc98e72fc" width="500" height="300">
 
 ![Elite11MVPs](https://github.com/jjparker34/Elite11/assets/123410317/7993536b-7f05-48da-b45a-3dcfc98e72fc)
 
