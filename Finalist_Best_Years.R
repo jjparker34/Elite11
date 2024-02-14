@@ -58,12 +58,20 @@ top_16 %>%
         "</td>",
         "</tr></table>"
       )),
-    subtitle = md('Elite 11 Finalists and their best year in college stats based on ppr points')
+    subtitle = md('Elite 11 Finalists and their best year in college stats based on ppr points, showing top 16/140 in dataset.')
   ) %>%
   opt_align_table_header(align = 'left') %>%
   tab_source_note(source_note = 'Data is from Campus2Canton || By: JJ Parker || @JParker1738') %>%
   tab_stubhead(label = md("**Player**")) %>%
   opt_table_font(font = google_font('Lato')) %>%
+  tab_footnote(
+    footnote = 'Proj. Frist Round Pick',
+    locations = cells_stub(rows = which(top_16$Player == 'Jayden Daniels' | top_16$Player == 'Drake Maye'))
+  ) %>%
+  tab_footnote(
+    footnote = 'Proj. Top 50 pick',
+    locations = cells_stub(rows = which(top_16$Player == 'Bo Nix'))
+  ) %>%
   data_color(
     columns = c(`Points per Game`),
     palette = c('red3','yellow3','green3'),

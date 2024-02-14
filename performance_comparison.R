@@ -43,7 +43,7 @@ gt_points <- gt(points_summary) %>%
         "</td>",
         "</tr></table>"
       )),
-    subtitle = md("**MVPs vs Finalist CFF Production.")
+    subtitle = md("**MVPs vs Finalist CFF Production(2010-2023).**")
   ) %>%
   cols_label(
     Category = "Category",
@@ -70,5 +70,5 @@ gt_points <- gt(points_summary) %>%
     domain = NULL
   ) %>%
   opt_align_table_header(align = 'left') %>%
-  tab_source_note(source_note = 'Data is from Campus2Canton || By: JJ Parker || @JParker1738')
+  tab_source_note(source_note = 'Data is from Campus2Canton & Wikipedia || By: JJ Parker || @JParker1738')
 print(gt_points)

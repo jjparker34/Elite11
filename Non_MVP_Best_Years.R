@@ -61,7 +61,7 @@ Drafted_Finalists <- Elite11Finalists%>%
 total_finalists <- nrow(Elite11Finalists)
 
 # Calculate the number of drafted finalists
-drafted_finalists_count <- nrow(Drafted_Finalists)
+drafted_finalists_count <- nrow(Drafted_Finalists)+2 #Account for TE's and 2024 draft
 
 # Calculate the percentage of finalists who were drafted
 finalist_percentage_drafted <- (drafted_finalists_count / total_finalists) * 100
@@ -95,7 +95,7 @@ Drafted_MVPs_after2010 <- Elite11MVPs_after2010 %>%
   filter(!stringr::str_detect(Draft, "Undrafted"))
 
 # Calculate the number of drafted MVPs
-drafted_MVPs_count2010 <- nrow(Drafted_MVPs_after2010) + 2
+drafted_MVPs_count2010 <- nrow(Drafted_MVPs_after2010) + 2 #Account for Rattler and Willams
 
 # Calculate the percentage of MVPs who were drafted
 percentage_MVPs_drafted2010 <- (drafted_MVPs_count2010 / after_2010_MVPs) * 100
@@ -114,7 +114,7 @@ Drafted_Finalists_after2010 <- Elite11Finalists_after2010 %>%
   filter(!stringr::str_detect(Draft, "Undrafted"))
 
 # Calculate the number of drafted MVPs
-drafted_Finalists_2010 <- nrow(Drafted_Finalists_after2010)
+drafted_Finalists_2010 <- nrow(Drafted_Finalists_after2010)+4
 
 # Calculate the percentage of MVPs who were drafted
 percentage_Finalists_drafted_2010 <- (drafted_Finalists_2010 / after_2010_Finalists) * 100
@@ -122,8 +122,26 @@ percentage_Finalists_drafted_2010 <- (drafted_Finalists_2010 / after_2010_Finali
 # Output the result
 percentage_Finalists_drafted_2010
 #--------------------------------------------------------
+#Find average draft position for MVPs:
+MVP_draft_position <- read_csv("MVP_draft_position.csv")
+MVP_draft_position_2010 <- MVP_draft_position %>%
+  filter(Elite11Class >= 2010)
 
+avg_MVP_position <- mean(MVP_draft_position$`Draft Pick Overall`)
+avg_MVP_position_2010 <-mean(MVP_draft_position_2010$`Draft Pick Overall`)
+#Find average draft position for Finalists:
 
+#Note COrnelius Ingram and Blake Bell were drafted as TE and are excluded.
+best_finalist_year <- read_csv("best_finalist_year.csv")
+best_finalist_year_2010 <- best_finalist_year %>%
+  filter(Elite11Class >= 2010)
+avg_finalist_position <- mean(best_finalist_year$`Draft Pick Overall`)
+avg_finalist_position_2010 <- mean(best_finalist_year_2010$`Draft Pick Overall`)
+
+best_finalist_year <- finalist_yearly %>%
+  arrange(desc(`PPR Points`)) %>%
+  distinct(Player, .keep_all = TRUE)
+#write.csv(best_finalist_year, file = 'best_finalist_year.csv')
 
 draft_summary <- data.frame(
   Category = c("MVPs", "Finalists", "MVPs (2010-2023)", "Finalists (2010-2023)"),
@@ -132,40 +150,51 @@ draft_summary <- data.frame(
     finalist_percentage_drafted,
     percentage_MVPs_drafted2010,
     percentage_Finalists_drafted_2010
+  ),
+  Avg_Draft = c(
+    avg_MVP_position,
+    avg_finalist_position,
+    avg_MVP_position_2010,
+    avg_finalist_position_2010
   )
 )
 gt_table <- gt(draft_summary) %>%
   tab_header(
     title = html(
       paste0(
-        "<img src='https://highschoolfootballamerica.com/wp-content/uploads/2020/06/elite-11-scaled.jpg' style='height: 60px;' />",
-        "<br>",
-        "<span style='font-weight: bold;'>MVP and Finalists Draft Comparison</span>"
+        "<table style='width: 100%;'><tr>",
+        "<td style='text-align: left; vertical-align: middle;'>",
+        "<span style='font-weight: bold;'>MVP & Finalist Draft Comparison </span>",
+        "</td>",
+        "<td style='text-align: right; vertical-align: middle;'>",
+        "<img src='https://yt3.googleusercontent.com/QjzfaKc1XXbiKb2Yy-zqhuwilT3kqX3WbRrL7cMf8N-BlaFyXJszsEUmlcQ2amumom28QSXnyw=s900-c-k-c0x00ffffff-no-rj' style='height: 60px;' />",
+        "</td>",
+        "</tr></table>"
       )),
     subtitle = md("**What percentage of Elite 11 MVPs get drafted compared to Elite 11 Finalists?**")
   ) %>%
   cols_label(
     Category = "Category",
-    Draft_Percentage = "Draft Percentage (%)"
+    Draft_Percentage = "Draft Percentage (%)",
+    Avg_Draft = "Average Draft Position"
   ) %>%
   fmt_number(
-    columns = c(Draft_Percentage),
+    columns = c(Draft_Percentage,Avg_Draft),
     decimals = 2,
     suffixing = TRUE # Enable suffixing to add the percent sign
   ) %>%
-  text_transform(
-    locations = cells_stub(),
-    fn = function(x) {
-      ifelse(x %in% c("MVPs", "Finalists"), html("<strong>", x, "</strong>"), x)
-    }
-  )%>%
   tab_options(
     stub.font.weight = "bold"
   )%>%
   tab_footnote(
-    footnote = "Accounts for Spencer Rattler & Caleb Williams Draft Capital",
+    footnote = "Accounts for the 2024 NFL Draft Projections.",
+    locations = cells_column_labels(Draft_Percentage)
+    )%>%
+  tab_footnote(
+    footnote = "Excludes Blake Bell & Cornelius Ingram who were drafted as TEs.",
     locations = cells_body(
-      columns = c(Category),rows = c(1,3) 
+      columns = c(Draft_Percentage),
+      rows = c(2)
     )
   )%>%
   opt_table_font(font = google_font('Lato')) %>%
@@ -174,14 +203,14 @@ gt_table <- gt(draft_summary) %>%
     palette = c('red3','yellow3','green3'),
     domain = NULL
   ) %>%
+  opt_table_font(font = google_font('Lato')) %>%
+  data_color(
+    columns = c(Avg_Draft),
+    palette = c('green3','yellow3','red3'),
+    domain = NULL
+  ) %>%
   opt_align_table_header(align = 'left') %>%
-  tab_source_note(source_note = 'Data is from Wikipedia || By: JJ Parker || @JParker1738')
+  tab_source_note(source_note = 'Data is from Wikipedia & Campus2Canton || By: JJ Parker || @JParker1738')
 
-gt_table
+print(gt_table)
 
-
-
-
-#CFBFastR
-
-cfbd_stats_season_player(2019, team = "LSU", category = "passing")
